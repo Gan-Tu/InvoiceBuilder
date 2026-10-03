@@ -129,7 +129,7 @@ export default function App() {
     <div className="flex h-full flex-col lg:overflow-hidden" style={{ '--sidebar': `${sidebarWidth}px` } as CSSProperties}>
       <header className="flex h-14 shrink-0 items-center justify-between border-b border-line bg-white px-4 sm:px-5">
         <div className="flex items-center gap-2.5">
-          <Logo className="size-7 text-ink" />
+          <Logo className="size-8" />
           <span className="text-[15px] font-semibold tracking-tight">Invoice Builder</span>
         </div>
         <div className="flex items-center gap-2">
