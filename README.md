@@ -21,7 +21,7 @@ Then open the printed local URL. `⌘S` (or `Ctrl+S`) downloads the PDF.
 `POST /api/invoice` takes a JSON body and returns a PDF. Every field is optional, and any section you leave out is left out of the PDF (no logo, no "Bill to", no notes, no tax line, and so on). Numbers can be numbers or numeric strings.
 
 ```bash
-curl -X POST https://your-deployment.vercel.app/api/invoice \
+curl -X POST http://invoice.tugan.app/api/invoice \
   -H 'content-type: application/json' \
   -o INV-0042.pdf \
   -d '{
