@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 /**
- * Serves the Vercel-style functions in `api/` during local development, so
+ * Serves the Vercel-style functions in `src/server/` during local development, so
  * `POST http://localhost:5173/api/invoice` works exactly like it does in production.
  */
 function localApi(): Plugin {
@@ -16,7 +16,7 @@ function localApi(): Plugin {
         const name = url.slice('/api/'.length).split('?')[0].replace(/\/+$/, '')
         if (!/^[\w-]+$/.test(name)) return next()
         try {
-          const mod = await server.ssrLoadModule(`/api/${name}.ts`)
+          const mod = await server.ssrLoadModule(`/src/server/${name}.ts`)
           const method = (req.method ?? 'GET').toUpperCase()
           const handler = mod[method] ?? mod.default
           if (typeof handler !== 'function') {

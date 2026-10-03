@@ -1,10 +1,10 @@
 import { createElement, type ReactElement } from 'react'
 import path from 'node:path'
 import { Font, renderToBuffer, type DocumentProps } from '@react-pdf/renderer'
-import { InvoiceDocument, pdfFileName } from '../src/invoice/document'
-import { normalizeInvoice } from '../src/lib/normalize'
-import { imageSize } from '../src/lib/image-size'
-import type { Logo } from '../src/types'
+import { InvoiceDocument, pdfFileName } from '../invoice/document'
+import { normalizeInvoice } from '../lib/normalize'
+import { imageSize } from '../lib/image-size'
+import type { Logo } from '../types'
 
 /**
  * POST /api/invoice  — JSON in, PDF out.

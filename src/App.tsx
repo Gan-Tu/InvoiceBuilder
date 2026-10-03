@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type CSSProperties } from 'react'
-import { Download, FilePlus2, Loader2, RotateCcw } from 'lucide-react'
+import { Download, FilePlus2, Loader2, RotateCcw, Save, Check } from 'lucide-react'
 import { Editor } from './components/Editor'
 import { PreviewPane } from './components/PreviewPane'
 import { Button, Kbd } from './components/ui'
@@ -78,10 +78,23 @@ function ResizeHandle({ onResize, onReset }: { onResize: (clientX: number) => vo
 }
 
 export default function App() {
-  const [invoice, setInvoice] = usePersistedInvoice()
+  const [invoice, setInvoice, saveInvoice, prefillError] = usePersistedInvoice()
+  const [saved, setSaved] = useState(false)
   const [sidebarWidth, setSidebarWidth] = useSidebarWidth()
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(prefillError)
+
+  const save = useCallback(() => {
+    try {
+      saveInvoice()
+      setSaved(true)
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not save this invoice.')
+    }
+  }, [saveInvoice])
+
+  useEffect(() => setSaved(false), [invoice])
 
   const download = useCallback(async () => {
     if (busy) return
@@ -127,7 +140,7 @@ export default function App() {
 
   return (
     <div className="flex h-full flex-col lg:overflow-hidden" style={{ '--sidebar': `${sidebarWidth}px` } as CSSProperties}>
-      <header className="flex h-14 shrink-0 items-center justify-between border-b border-line bg-white px-4 sm:px-5">
+      <header className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-white px-4 py-2 sm:px-5">
         <div className="flex items-center gap-2.5">
           <Logo className="size-8" />
           <span className="text-[15px] font-semibold tracking-tight">Invoice Builder</span>
@@ -140,6 +153,10 @@ export default function App() {
           <Button variant="outline" onClick={() => setInvoice(blankInvoice(invoice))} title="Start a new invoice, keeping your business details">
             <FilePlus2 className="size-3.5" />
             <span className="hidden sm:inline">New</span>
+          </Button>
+          <Button variant="outline" onClick={save} title="Save these fields for future visits" aria-label="Save invoice">
+            {saved ? <Check className="size-3.5" /> : <Save className="size-3.5" />}
+            {saved ? 'Saved' : 'Save'}
           </Button>
           <Button variant="primary" onClick={download} disabled={busy} className="pr-2.5">
             {busy ? <Loader2 className="size-3.5 animate-spin" /> : <Download className="size-3.5" />}
@@ -154,7 +171,7 @@ export default function App() {
           <Editor invoice={invoice} onChange={setInvoice} />
           <div className="flex items-center gap-2 px-6 py-4 text-xs text-neutral-400">
             <span className="size-1.5 rounded-full bg-emerald-500" />
-            Autosaved in this browser
+            Draft autosaved · Save to reuse on future visits
           </div>
         </aside>
         <ResizeHandle onResize={(x) => setSidebarWidth(clampWidth(x))} onReset={() => setSidebarWidth(SIDEBAR.default)} />
@@ -164,7 +181,7 @@ export default function App() {
       </div>
 
       {error ? (
-        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 rounded-lg bg-ink px-4 py-2.5 text-[13px] text-white shadow-lg">{error}</div>
+        <div role="alert" className="fixed bottom-5 left-1/2 -translate-x-1/2 rounded-lg bg-ink px-4 py-2.5 text-[13px] text-white shadow-lg">{error}</div>
       ) : null}
     </div>
   )

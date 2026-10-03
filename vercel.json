@@ -2,8 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
   "functions": {
-    "api/invoice.ts": {
-      "includeFiles": "src/assets/fonts/**",
+    "api/invoice.mjs": {
+      "includeFiles": "{src/assets/fonts/**,node_modules/pdfkit/js/standard-fonts/**}",
       "maxDuration": 30
     }
   }
